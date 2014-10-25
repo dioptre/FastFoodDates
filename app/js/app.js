@@ -13,7 +13,7 @@ App = Ember.Application.create();
     // host: 'http://fastfooddates.com'
 // });
 
-App.ApplicationAdapter = DS.FixtureAdapter;
+App.ApplicationAdapter = DS.FixtureAdapter.extend({});
 
 // App.Store = DS.Store.extend({
 //   revision: 11,
@@ -52,8 +52,8 @@ App.Meetup = DS.Model.extend({
 	date: DS.attr('', {defaultValue: ''}),
 	time: DS.attr('', {defaultValue: ''}),
 	state: DS.attr('', {defaultValue: ''}),
-	buyer: DS.belongsTo('user'),
-	recipient: DS.belongsTo('user')
+	buyer: DS.hasMany('meetup', { async: true }),
+	recipient: DS.hasMany('meetup', { async: true })
 });
 
 App.Meetup.reopenClass({
