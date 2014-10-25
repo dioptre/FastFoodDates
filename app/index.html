@@ -33,11 +33,67 @@
   </script>
 
   <script type="text/x-handlebars" data-template-name="index">
-   <h1>hi</h1>
+   <h1>you are lost</h1>
   </script>
 
-  <script type="text/x-handlebars" data-template-name="article">
+  <script type="text/x-handlebars" data-template-name="profile">
+   <h1>profile</h1>
+   <p>{{firstname}} {{lastname}}</p>
+   
+        {{#each meetup in meetups}}
+          {{meetup.id}}
+        {{else}}
+          Not loading the hasMany fixtures!
+        {{/each}}
     
+   <p>{{photoURL}}</p>
+   <p>radio select 
+   {{#if isBuyer}}
+    <button>Buyer OK</button>
+    <button {{action 'makeRecipient'}}>Recipient NO</button>
+   {{else}}
+    <button {{action 'makeBuyer'}}>Buyer NO</button>
+    <button>Recipient OK</button>
+   {{/if}}
+   buyer seller
+   </p>
+   <p>next</>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="login">
+    login
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="setup">
+    setup
+    carousel location
+    day
+    time
+    invite!
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="confirmation">
+    youre set for the date!
+    location
+    date
+    time
+    ok
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="date">
+    my date coming up - details
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="slot">
+    my buyer slots (available) - offers to recipients as list
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="dates">
+    my dates coming up - list
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="proposal">
+    my list of offers to buy me kfc
   </script>
 
   <script type="text/x-handlebars" data-template-name="template">
