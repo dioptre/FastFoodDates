@@ -24,6 +24,7 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
   <![endif]-->
 
+  <link href='/app/css/style.css' rel='stylesheet' type='text/css'>
 
 
 </head>
@@ -39,25 +40,20 @@
   <script type="text/x-handlebars" data-template-name="profile">
    <h1>profile</h1>
    <p>{{firstname}} {{lastname}}</p>
-   
-        {{#each meetup in meetups}}
-          {{meetup.address}}
-        {{else}}
-          Not loading the hasMany fixtures!
-        {{/each}}
-    
    <p>{{photoURL}}</p>
    <p>radio select 
    {{#if isBuyer}}
     <button>Buyer OK</button>
     <button {{action 'makeRecipient'}}>Recipient NO</button>
+    {{#link-to 'setup'}}Next{{/link-to}}
    {{else}}
     <button {{action 'makeBuyer'}}>Buyer NO</button>
     <button>Recipient OK</button>
+    {{#link-to 'proposals'}}Next{{/link-to}}
    {{/if}}
    buyer seller
    </p>
-   <p>next</>
+
   </script>
 
   <script type="text/x-handlebars" data-template-name="login">
@@ -66,6 +62,9 @@
 
   <script type="text/x-handlebars" data-template-name="setup">
     setup
+    <input type='date'/> 
+    <input type='time'/> 
+    <div id="date-map" style=""/>
     carousel location
     day
     time
@@ -82,6 +81,12 @@
 
   <script type="text/x-handlebars" data-template-name="date">
     my date coming up - details
+      {{#each meetup in meetups}}
+        {{meetup.address}}
+      {{else}}
+        ...
+      {{/each}}
+    
   </script>
 
   <script type="text/x-handlebars" data-template-name="slot">
@@ -92,7 +97,7 @@
     my dates coming up - list
   </script>
 
-  <script type="text/x-handlebars" data-template-name="proposal">
+  <script type="text/x-handlebars" data-template-name="proposals">
     my list of offers to buy me kfc
   </script>
 
@@ -263,6 +268,10 @@
   <script src="/app/js/libs/velocity.ui.min.js"></script>
   <script src="/app/js/libs/emberui.js"></script>
 
+  <script src="https://maps.googleapis.com/maps/api/js?libraries=drawing&sensor=true&callback=MapInitialize"></script>
+  <script src="/app/js/libs/NKD.utils.js"></script>
+  <script src="/app/js/libs/NKD.maps.js"></script>
+
 <script src="/app/js/libs/localstorage_adapter.js"></script>
 <script>
 
@@ -279,6 +288,7 @@
   else {
     cancelFullScreen.call(doc);
   }
+
   
 </script>
 <script src="/app/js/app.js"></script>

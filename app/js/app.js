@@ -20,6 +20,28 @@ App.ApplicationAdapter = DS.FixtureAdapter.extend({});
 //   url: "http://fastfooddates.com"
 // });
 
+
+App.set('deferredMap', Ember.RSVP.defer());
+MapInitialize = function() {
+	App.get('deferredMap').resolve("Map Loaded");
+}
+function OnMapUpdate(map, event, center, viewport) {
+    cmap = map;
+    if (event.eventType == "EDITED") {
+        if (event.eventSource.type == "marker") {
+            DeleteExceptedShape(map, event.eventSource);
+        }
+        else {
+            DeleteExceptedShapeTypes(map);
+        }
+    }
+    if (event.eventType == "BOUNDS_CHANGED") {
+        //console.log(event);
+        lastMapUpdates = viewport;
+    }
+}
+
+
 App.Router.map(function() {
   this.route('login');
   this.route('profile');
@@ -56,7 +78,11 @@ App.Meetup = DS.Model.extend({
 	recipient: DS.hasMany('meetup', { async: true })
 });
 
-App.Meetup.reopenClass({
+App.Slot = App.Meetup.extend({});
+App.Proposal = App.Meetup.extend({});
+App.FastFoodDate = App.Meetup.extend({});
+
+App.FastFoodDate.reopenClass({
   FIXTURES: [
     { id: 55, locationLatitude: '61.4', locationLongitude: '120.2', address: 'kfc down the road', time: '11:30', date: '01/01/2015', state: 'booked', buyer: 1, recipient: 2 },
     { id: 44, locationLatitude: '61.4', locationLongitude: '120.2', address: 'kfc up the road', time: '12:30', date: '01/01/2015', state: 'booked', buyer: 1, recipient: 3 },
@@ -81,7 +107,6 @@ App.ProfileRoute = Ember.Route.extend({
 });
 
 App.ProfileController = Ember.ObjectController.extend({
-	
 	actions: {
 		makeBuyer: function () {
 			this.set('model.isBuyer', true);
@@ -93,6 +118,24 @@ App.ProfileController = Ember.ObjectController.extend({
 		}
 	}
 });
+
+
+
+App.SetupView = Em.View.extend({
+  didInsertElement: function(){
+  	var _this = this;
+	Ember.RSVP.allSettled([App.get('deferredMap')]).then(function (array) {
+		Ember.run.later(_this, function () { 
+			Ember.run.scheduleOnce('afterRender', this, function() {
+			    SetupMap('date-map'); 
+			  });
+		}, 750);
+
+	});
+
+  }
+});
+
 
 
 
