@@ -24,6 +24,9 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
   <![endif]-->
 
+  <link href='/app/css/emberui.css' rel='stylesheet' type='text/css'>
+  <link href='/app/css/emberui-default-theme.css' rel='stylesheet' type='text/css'>
+  <link href='/app/css/normalize.css' rel='stylesheet' type='text/css'>
   <link href='/app/css/style.css' rel='stylesheet' type='text/css'>
 
 
@@ -62,13 +65,13 @@
 
   <script type="text/x-handlebars" data-template-name="setup">
     setup
-    <input type='date'/> 
-    <input type='time'/> 
-    <div id="date-map" style=""/>
-    carousel location
-    day
-    time
-    invite!
+    {{slot.address}}
+    <div id="date-map"></div>
+    <br/><br/>
+    {{eui-selectdate style="default" placeholder="Select a date"}}
+    {{eui-select placeholder='Select a time' options=times}}
+    <br/><br/>
+    {{eui-button label='invite' action='invite' style='primary'}}
   </script>
 
   <script type="text/x-handlebars" data-template-name="confirmation">
@@ -268,7 +271,7 @@
   <script src="/app/js/libs/velocity.ui.min.js"></script>
   <script src="/app/js/libs/emberui.js"></script>
 
-  <script src="https://maps.googleapis.com/maps/api/js?libraries=drawing&sensor=true&callback=MapInitialize"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?libraries=places&sensor=true&callback=MapInitialize"></script>
   <script src="/app/js/libs/NKD.utils.js"></script>
   <script src="/app/js/libs/NKD.maps.js"></script>
 

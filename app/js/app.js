@@ -26,18 +26,11 @@ MapInitialize = function() {
 	App.get('deferredMap').resolve("Map Loaded");
 }
 function OnMapUpdate(map, event, center, viewport) {
-    cmap = map;
-    if (event.eventType == "EDITED") {
-        if (event.eventSource.type == "marker") {
-            DeleteExceptedShape(map, event.eventSource);
-        }
-        else {
-            DeleteExceptedShapeTypes(map);
-        }
-    }
-    if (event.eventType == "BOUNDS_CHANGED") {
-        //console.log(event);
-        lastMapUpdates = viewport;
+    if (event.eventType == "MARKER_CLICKED") {
+    	//App.set('lastLocationPicked', event.eventSource);
+    	map.appContext.controller.content.slot.set('locationLatitude', event.eventSource.position.lat());
+    	map.appContext.controller.content.slot.set('locationLongitude', event.eventSource.position.lng());
+    	map.appContext.controller.content.slot.set('address', event.eventSource.title);
     }
 }
 
@@ -120,6 +113,14 @@ App.ProfileController = Ember.ObjectController.extend({
 });
 
 
+App.SetupRoute = Ember.Route.extend({
+	model: function() {
+		return Ember.RSVP.hash({
+			user: this.store.find('user', 1),
+			slot: this.store.createRecord('slot')
+		});
+	}
+});
 
 App.SetupView = Em.View.extend({
   didInsertElement: function(){
@@ -127,7 +128,34 @@ App.SetupView = Em.View.extend({
 	Ember.RSVP.allSettled([App.get('deferredMap')]).then(function (array) {
 		Ember.run.later(_this, function () { 
 			Ember.run.scheduleOnce('afterRender', this, function() {
-			    SetupMap('date-map'); 
+				var setupMap = function (position) {
+					var m = SetupMap('date-map'); 
+					m.appContext = _this;
+					if (position)
+						m.setCenter({ lat: position.coords.latitude, lng: position.coords.longitude });
+					m.setZoom(10);
+					var foundLocations = function(results, status) {
+						$.each(results, function (i,v) {
+							AddMarker(m, v.geometry.location, false, v.vicinity, v.id);							
+						});
+					}
+					var service = new google.maps.places.PlacesService(m);
+  					service.nearbySearch({
+  						location: new google.maps.LatLng(m.getCenter().lat(),m.getCenter().lng()), 
+  						keyword: 'kfc',
+  						radius: '15000',
+    					types: ['store','food']
+  					}, foundLocations);
+
+				}
+			    if (navigator.geolocation) {
+					navigator.geolocation.getCurrentPosition(setupMap)
+				}	
+				else {
+					setupMap(null);
+				}
+
+			    
 			  });
 		}, 750);
 
@@ -136,6 +164,41 @@ App.SetupView = Em.View.extend({
   }
 });
 
+App.SetupController = Ember.ObjectController.extend({
+	times: [
+	  { label: '10:00', value: '1000' },
+	  { label: '10:30', value: '1030' },
+	  { label: '11:00', value: '1100' },
+	  { label: '11:30', value: '1130' },
+	  { label: '12:00', value: '1200' },
+	  { label: '12:30', value: '1230' },
+	  { label: '13:00', value: '1300' },
+	  { label: '13:30', value: '1330' },
+	  { label: '14:00', value: '1400' },
+	  { label: '14:30', value: '1430' },
+	  { label: '15:00', value: '1500' },
+	  { label: '15:30', value: '1530' },
+	  { label: '16:00', value: '1600' },
+	  { label: '16:30', value: '1630' },
+	  { label: '17:00', value: '1700' },
+	  { label: '17:30', value: '1730' },
+	  { label: '18:00', value: '1800' },
+	  { label: '18:30', value: '1830' },
+	  { label: '19:00', value: '1900' },
+	  { label: '19:30', value: '1930' },
+	  { label: '20:00', value: '2000' },
+	  { label: '20:30', value: '2030' },
+	  { label: '21:00', value: '2100' },
+	  { label: '21:30', value: '2130' },
+	  { label: '22:00', value: '2200' }
+	],
+	actions: {
+		invite: function () {
+			console.log('hi')
+		}
+	}
+
+});
 
 
 
